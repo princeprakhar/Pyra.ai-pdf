@@ -7,12 +7,30 @@
 </head>
 <body>
     <h1>Chat with PDF</h1>
+    
+    <!-- Form for uploading PDF -->
     <form action="/chat_with_pdf" method="post" enctype="multipart/form-data">
         <input type="file" name="file">
-        <button type="submit">Submit</button>
+        <button type="submit">Upload PDF</button>
     </form>
+    
+    <!-- Display uploaded PDF -->
+    {% if pdf_display %}
+    <h2>Uploaded PDF:</h2>
+    <embed src="{{ pdf_display }}" width="690" height="740" type="application/pdf">
+    {% endif %}
+    
+    <!-- Display processing result -->
     {% if result %}
+    <h2>Processing Result:</h2>
     <p>{{ result }}</p>
+    
+    <!-- Form for entering additional text -->
+    <h2>Enter Additional Text:</h2>
+    <form action="/process_pdf_with_text" method="post">
+        <textarea name="additional_text" rows="4" cols="50"></textarea><br><br>
+        <button type="submit">Process with Additional Text</button>
+    </form>
     {% endif %}
 </body>
 </html>
