@@ -1,8 +1,11 @@
-# Import necessary libraries
-import base64
-import io
+import time
 import os
-from typing import Union, Optional
+import io 
+import base64
+
+from typing import Optional
+from dotenv import load_dotenv
+load_dotenv()
 
 from fastapi import FastAPI, Request, Form, File, UploadFile
 from fastapi.responses import HTMLResponse
@@ -27,7 +30,6 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Initialize Jinja2 templates
 templates = Jinja2Templates(directory="templates")
 
-# Function to load models and setup necessary services
 def load_models():
     embedding_model = OllamaEmbeddings(model="jina/jina-embeddings-v2-base-de")
     
@@ -37,17 +39,34 @@ def load_models():
 
     if index_name in pc.list_indexes().names():
         pc.delete_index(index_name)
-    else:
-        # Creating a new index
-        pc.create_index(
-            name=index_name,
-            dimension=768,
-            metric="cosine",
-            spec=ServerlessSpec(
-                cloud='aws',
-                region='us-east-1'
-            )
+        # Wait for the deletion to complete
+        time.sleep(2)  # Adjust delay as necessary
+
+    # Retry logic to ensure the index is properly deleted before recreating
+    retries = 0
+    while index_name in pc.list_indexes().names() and retries < 5:
+        time.sleep(2)  # Wait for 2 seconds before retrying
+        retries += 1
+
+    # Creating a new index
+    pc.create_index(
+        name=index_name,
+        dimension=768,
+        metric="cosine",
+        spec=ServerlessSpec(
+            cloud='aws',
+            region='us-east-1'
         )
+    )
+    
+    # Add a delay or retry logic to wait for the index to be created
+    retries = 0
+    while index_name not in pc.list_indexes().names() and retries < 5:
+        time.sleep(2)  # Wait for 2 seconds
+        retries += 1
+
+    if index_name not in pc.list_indexes().names():
+        raise ValueError(f"Failed to create index '{index_name}'")
 
     return embedding_model
 
@@ -91,7 +110,7 @@ async def post_chat_with_pdf(request: Request, file: UploadFile = File(...)):
     pdf_display = f'data:application/pdf;base64,{b64_pdf}'
 
     # Call split_load_data function to process PDF and retrieve success message and Pinecone object
-    success_message, pinecone = split_load_data(pdf_data, "my_index_name", embedding_model)
+    success_message, pinecone = split_load_data(pdf_data, "docquest", embedding_model)
 
     return templates.TemplateResponse("chat_with_pdf.html", {"request": request, "pdf_display": pdf_display, "result": success_message})
 
