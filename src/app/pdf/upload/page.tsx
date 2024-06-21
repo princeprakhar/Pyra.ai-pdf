@@ -16,7 +16,7 @@ import Dropzone, { FileRejection } from "react-dropzone";
         setIsDragOver(false);
         toast({
             title: "File Rejected",
-            description: `File ${file.file.name} was rejected because it is not a valid pdf file`,
+            description: `File ${file.file.name} was rejected because it is not a valid supported file`,
             variant: "destructive",
         });
     }

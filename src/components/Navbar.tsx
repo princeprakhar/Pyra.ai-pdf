@@ -25,7 +25,7 @@ const Navbar =  async () => {
 
                 <div className="h-full flex items-center space-x-4">
                                             
-                    <Link href='#' className={buttonVariants({
+                    <Link href='/home' className={buttonVariants({
                         variant: "ghost",
                         size: "sm"
                     })}>  Home    </Link>
