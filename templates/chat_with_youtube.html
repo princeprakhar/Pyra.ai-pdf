@@ -8,11 +8,21 @@
 <body>
     <h1>Chat with YouTube</h1>
     <form action="/chat_with_youtube" method="post">
-        <input type="text" name="url" placeholder="Enter YouTube URL">
+        <input type="text" name="url" placeholder="Enter YouTube URL" required>
         <button type="submit">Submit</button>
     </form>
-    {% if result %}
-    <p>{{ result }}</p>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    {% if video_id %}
+        <h2>Embedded YouTube Video</h2>
+        <iframe width="950" height="420" src="https://www.youtube.com/embed/{{ video_id }}" 
+                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+    {% endif %}
+    {% if transcription %}
+        <h2>Transcription</h2>
+        <p>{{ transcription }}</p>
     {% endif %}
 </body>
 </html>
