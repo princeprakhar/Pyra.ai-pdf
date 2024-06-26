@@ -1,1 +1,11 @@
 fastapi
+PyPDF2
+langchain
+langchain-pinecone
+langchain_community
+langchain-google-genai
+pinecone-client[grpc]
+python-dotenv
+openai-whisper
+pytube 
+pydub
