@@ -20,6 +20,34 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+## Getting Started (Python Setup)
+This section provides guidance on configuring this project on your local machine and running the Streamlit application locally.
+### Prerequisites
+To run this project, ensure that your PC/Laptop has the following prerequisites:
+- Python
+- Integrated Development Environment (IDE) such as PyCharm or Visual Studio Code.
+
+### Project Setup
+
+To initialize this project on your local machine, kindly adhere to the outlined instructions provided herewith. By following these meticulously crafted steps, you will seamlessly configure the project environment for optimal functionality on your personal workstation. Your cooperation in adhering to these guidelines is greatly appreciated.
+
+1. Create a new virtual environment by using the command
+   ```sh
+   python -m venv .venv
+   ```
+2. Activate the newly created virtual environment
+   ```sh
+   .venv\Scripts\activate.bat
+   ```
+3. Install all the required project dependencies by executing the provided command. Subsequent to running this command, the internal setup file will be invoked, facilitating the configuration of your project by identifying and installing the necessary packages.
+   ```sh
+   pip install -r requirements.txt
+   ```
+4. After successfully installing all essential dependencies, proceed to run Streamlit locally by executing the following command:
+   ```sh
+   fastapi dev Home.py
+
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
