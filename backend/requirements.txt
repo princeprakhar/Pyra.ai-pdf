@@ -1,0 +1,33 @@
+fastapi==0.115.6
+uvicorn==0.34.0
+starlette==0.41.3
+pydantic==2.10.5
+python-multipart==0.0.20
+authlib==1.4.0
+python-jose[cryptography]==3.3.0
+itsdangerous==2.2.0
+langchain-openai==0.3.0
+langchain==0.3.16
+langchain-chroma==0.2.0
+groq==0.15.0
+openai==1.59.7
+pinecone-client[grpc]==5.0.1
+pymupdf4llm==0.0.17
+chonkie[semantic]==0.4.1
+# sentence-transformers==3.4.1
+transformers==4.48.1
+python-dotenv==1.0.1
+requests==2.32.3
+aiohttp==3.11.11
+httpx==0.28.1
+urllib3==2.3.0
+cryptography==44.0.0
+PyJWT==2.10.1
+# torch==2.5.1
+python-jose==3.3.0
+boto3==1.36.11
+numpy>=1.23.0,<2.2
+psycopg2-binary==2.9.10
+passlib==1.7.4
+email-validator==2.2.0
+google-auth==2.38.0
