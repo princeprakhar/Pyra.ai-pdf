@@ -32,3 +32,6 @@ class ProcessDocRequest(BaseModel):
 
 class GenerateResponseRequest(BaseModel):
     query: str
+    
+class GetDocRequest(BaseModel):
+    filename: str

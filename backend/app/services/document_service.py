@@ -14,6 +14,7 @@ import tempfile
 import uuid
 import logging
 import aiohttp
+from botocore.exceptions import ClientError
 from app.utils.helpers import batch_iterable
 from app.dependencies.system_message_dependencies import get_latest_system_message
 from groq import Groq
@@ -281,3 +282,62 @@ async def upload_doc(file: UploadFile, current_user: UserPDF):
         if temp_file_path and os.path.exists(temp_file_path):
             os.remove(temp_file_path)
             logging.info(f"Temporary file deleted: {temp_file_path}")
+            
+            
+            
+async def get_doc_helper(filename: str, current_user: UserPDF):
+    try:
+        # Construct the S3 key based on the pattern used in upload_to_s3
+        # URL-decode the filename from the path parameter
+        logging.info(f"Filename: {filename}")
+        from urllib.parse import unquote
+        decoded_filename = unquote(filename)
+        
+        logging.info(f"Decoded filename: {decoded_filename}")
+        username = current_user.username
+        s3_key = f"uploads/{username}/{decoded_filename}"
+        
+        logging.info(f"Looking for document with S3 key: {filename}")
+        
+        try:
+            # Check if the object exists in S3
+            s3_client.head_object(Bucket=os.getenv("S3_BUCKET_NAME"), Key=s3_key)
+            
+            # Generate a presigned URL for secure access
+            presigned_url = s3_client.generate_presigned_url(
+                'get_object',
+                Params={
+                    'Bucket': os.getenv("S3_BUCKET_NAME"),
+                    'Key': s3_key
+                },
+                ExpiresIn=3600  # URL expires in 1 hour
+            )
+            
+            return JSONResponse(
+                content={
+                    "presigned_url": presigned_url,
+                    "expires_in": 3600
+                },
+                status_code=200
+            )
+            
+        except ClientError as e:
+            if e.response['Error']['Code'] == '404':
+                logging.error(f"Document not found in S3: {s3_key}")
+                return JSONResponse(
+                    content={"error": "Document not found"},
+                    status_code=404
+                )
+            else:
+                logging.error(f"S3 error: {str(e)}")
+                return JSONResponse(
+                    content={"error": "Failed to retrieve document from storage"},
+                    status_code=500
+                )
+            
+    except Exception as e:
+        logging.error(f"Document retrieval error: {str(e)}")
+        return JSONResponse(
+            content={"error": str(e)},
+            status_code=500
+        )

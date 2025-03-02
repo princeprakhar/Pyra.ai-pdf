@@ -114,7 +114,7 @@ const SignIn = () => {
                       placeholder="Username"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-slate-50 rounded-lg text-black placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-10 pr-4 py-3 bg-slate-200 rounded-lg text-black placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
                       required
                     />
                   </div>

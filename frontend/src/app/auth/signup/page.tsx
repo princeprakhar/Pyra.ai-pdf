@@ -90,7 +90,7 @@ const SignUp = () => {
           {/* Background overlay for a subtle blur effect */}
           <div className="absolute inset-0 rounded-xl blur opacity-30 transition duration-1000"></div>
 
-          <div className="relative p-8 bg-white dark:bg-gray-800 ">
+          <div className="relative p-8 ">
             <form onSubmit={handleSubmit} className="flex flex-col items-center">
               <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-700 via-pink-700 to-purple-700 bg-clip-text text-transparent">
                 Prakhar.ai
@@ -183,7 +183,7 @@ const SignUp = () => {
                 whileTap={{ scale: 0.95 }}
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-700 hover:to-blue-700 text-black font-semibold py-3 px-6 rounded-lg transition-all duration-250 disabled:opacity-50"
+                className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-250 disabled:opacity-50"
               >
                 {isLoading ? "Creating Account..." : "Sign Up"}
               </motion.button>

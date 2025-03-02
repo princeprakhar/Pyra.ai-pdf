@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status,Query
 from fastapi.responses import JSONResponse, StreamingResponse
 from sqlalchemy.orm import Session
-from app.schemas import ProcessDocRequest, GenerateResponseRequest
+from app.schemas import ProcessDocRequest, GenerateResponseRequest, GetDocRequest
 from app.dependencies.auth_dependencies import get_current_user
 from app.dependencies.db_dependencies import get_db
 from app.models import UserPDF
-from app.services.document_service import process_doc, generate_response, generate_response_audio, upload_doc
+from app.services.document_service import process_doc, generate_response, generate_response_audio, upload_doc,get_doc_helper
 import logging
 
 router = APIRouter()
@@ -26,3 +26,10 @@ async def generate_response_audio_route(audio_file: UploadFile = File(...), curr
 @router.post("/api/upload-doc")
 async def upload_doc_route(file: UploadFile = File(...), current_user: UserPDF = Depends(get_current_user)):
     return await upload_doc(file, current_user)
+
+
+
+@router.get("/api/get-doc/")
+async def get_doc_route(filename: str = Query(..., min_length=1), current_user: UserPDF = Depends(get_current_user)):
+    return await get_doc_helper(filename=filename, current_user=current_user)
+
