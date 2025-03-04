@@ -10,7 +10,8 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "http://localhost:8000/:path*", // FastAPI backend
+        // destination: "http://localhost:8000/:path*", // FastAPI backend
+        destination: "https://prakhar-ai-pdf.vercel.app/:path*", // FastAPI backend
       },
     ];
   },
