@@ -6,6 +6,7 @@ import Sidebar from "@/components/Sidebar";
 import { BACKEND_URL } from "@/utils/constant";
 import { toast, Toaster } from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import {Button} from "@/components/ui/button";
 
 // Define a type for chat messages
 interface ChatMessage {
@@ -22,14 +23,19 @@ const ChatPage: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [question, setQuestion] = useState("");
   const [isChatLoading, setIsChatLoading] = useState(false);
+  const [pdfS3Key, setPdfS3Key] = useState<string>("");
   const  { fetchWithAuth } = useAuth();
 
   // On mount, retrieve the PDF information from localStorage
 useEffect(() => {
   const storedPdfName = localStorage.getItem("pdfFileName");
-  
+  const storedPdfS3Key = localStorage.getItem("pdfS3Key");
+  if (storedPdfS3Key) {
+    setPdfS3Key(storedPdfS3Key);
+  }
   if (storedPdfName) {
     setPdfName(storedPdfName);
+    
     // Fetch the PDF from the backend using the filename
     const fetchPdf = async () => {
       try {
@@ -81,7 +87,7 @@ useEffect(() => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query: question }),
+        body: JSON.stringify({ query: question, pdf_id: pdfS3Key }),
       });
 
       const data = await response.json();
@@ -104,6 +110,18 @@ useEffect(() => {
     }
   };
 
+
+  const handleDeleteAllPDFContext = async ()=>{
+    const response = await fetchWithAuth(`${BACKEND_URL}/namespace-data`, {
+      method: "DELETE",
+    });
+    toast.success("All PDF context deleted successfully");
+    localStorage.removeItem("pdfFileName");
+    localStorage.removeItem("pdfS3Key");
+    setTimeout(() => {
+      router.push("/pdf/upload");
+    }, 2000);
+  }
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar toggleSidebar={toggleSidebar} isOpen={isOpen} />
@@ -190,7 +208,13 @@ useEffect(() => {
           </div>
         </div>
       </div>
-
+      <div>
+        <Button
+          onClick={handleDeleteAllPDFContext}
+          className="mt-4">
+          Delete All Existing PDF Context
+        </Button>
+      </div>
       <Toaster position="top-right" />
     </div>
   );

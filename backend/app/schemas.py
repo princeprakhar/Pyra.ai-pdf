@@ -32,6 +32,7 @@ class ProcessDocRequest(BaseModel):
 
 class GenerateResponseRequest(BaseModel):
     query: str
+    pdf_id: str
     
 class GetDocRequest(BaseModel):
     filename: str
