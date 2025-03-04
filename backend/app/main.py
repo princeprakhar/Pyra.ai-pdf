@@ -24,12 +24,11 @@ app.add_middleware(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://prakhar-ai-pdf.vercel.app/","http://localhost:3000"],
+    allow_origins=["https://prakhar-ai-pdf.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 app.middleware("http")(log_requests)
 
 # Include routers
