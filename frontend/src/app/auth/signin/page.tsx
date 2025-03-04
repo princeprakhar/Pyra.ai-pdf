@@ -25,7 +25,7 @@ const SignIn = () => {
   // Redirect to chat page when user is logged in
   useEffect(() => {
     if (isLoggedIn) {
-      router.push("/chat");
+      router.push("/pdf/chat");
     }
   }, [isLoggedIn, router]);
 
@@ -56,7 +56,6 @@ const SignIn = () => {
         }
         // Call the global login function to update auth state
         login(response.data.access_token);
-        // Optionally, redirect after login (this effect will handle redirection)
         router.push("/pdf/upload");
       } else {
         toast.error(`Unexpected response: ${response.status}`);
@@ -114,7 +113,7 @@ const SignIn = () => {
                       placeholder="Username"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      className="w-full pl-10 pr-4 py-3 bg-slate-200 rounded-lg text-black placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-10 pr-4 py-3 bg-slate-50 rounded-lg text-black placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
                       required
                     />
                   </div>

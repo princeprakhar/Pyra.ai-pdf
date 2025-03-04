@@ -17,6 +17,8 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.6",
     "@mui/material": "^6.4.6",
+    "@radix-ui/react-progress": "^1.1.2",
+    "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.6",
     "@tabler/icons-react": "^3.30.0",
     "@tailwindcss/postcss": "^4.0.9",
@@ -40,6 +42,8 @@
   "devDependencies": {
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "autoprefixer": "^10.4.20"
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.21.0",
+    "eslint-config-next": "^15.2.1"
   }
 }

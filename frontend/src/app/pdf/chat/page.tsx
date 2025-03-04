@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
-import axios from "axios";
 import { BACKEND_URL } from "@/utils/constant";
 import { toast, Toaster } from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Define a type for chat messages
 interface ChatMessage {
@@ -22,6 +22,7 @@ const ChatPage: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [question, setQuestion] = useState("");
   const [isChatLoading, setIsChatLoading] = useState(false);
+  const  { fetchWithAuth } = useAuth();
 
   // On mount, retrieve the PDF information from localStorage
 useEffect(() => {
@@ -32,14 +33,11 @@ useEffect(() => {
     // Fetch the PDF from the backend using the filename
     const fetchPdf = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/get-doc/?filename=${encodeURIComponent(storedPdfName)}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("Token")}`
-          }
-        });
+        const response = await fetchWithAuth(`${BACKEND_URL}/get-doc/?filename=${encodeURIComponent(storedPdfName)}`);
         
-        if (response.data && response.data.presigned_url) {
-          setPdfUrl(response.data.presigned_url);
+        const data = await response.json();
+        if (data && data.presigned_url) {
+          setPdfUrl(data.presigned_url);
           // Add welcome message to chat
           setMessages([{ 
             sender: "bot", 
@@ -58,33 +56,6 @@ useEffect(() => {
     router.push("/pdf/upload");
   }
 }, [router]);
-  // useEffect(() => {
-  //   const storedPdfUrl = localStorage.getItem("pdfBlobUrl");
-  //   const storedPdfName = localStorage.getItem("pdfFileName");
-  //   const storedDocumentId = localStorage.getItem("documentId");
-    
-  //   if (storedPdfUrl) {
-  //     setPdfUrl(storedPdfUrl);
-  //     setPdfName(storedPdfName || "Uploaded PDF");
-  //     setDocumentId(storedDocumentId || "");
-      
-  //     // Add welcome message to chat
-  //     setMessages([{ 
-  //       sender: "bot", 
-  //       text: `I've analyzed your PDF "${storedPdfName}". What would you like to know about it?` 
-  //     }]);
-  //   } else {
-  //     toast.error("No PDF file found. Please upload a PDF first.");
-  //     router.push("/pdf/upload");
-  //   }
-    
-  //   // Clean up function to revoke blob URL when component unmounts
-  //   return () => {
-  //     if (storedPdfUrl && storedPdfUrl.startsWith('blob:')) {
-  //       URL.revokeObjectURL(storedPdfUrl);
-  //     }
-  //   };
-  // }, [router]);
 
 
   const toggleSidebar = () => {
@@ -105,26 +76,23 @@ useEffect(() => {
     setIsChatLoading(true);
 
     try {
-      // Send question to the backend chat endpoint
-      const response = await axios.post(
-        `${BACKEND_URL}/generate-response`,
-        { 
-          query:question // Include the document ID if available
+      const response = await fetchWithAuth(`${BACKEND_URL}/generate-response`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("Token")}`,
-          },
-        }
-      );
+        body: JSON.stringify({ query: question }),
+      });
+
+      const data = await response.json();
       // Add bot's response to chat
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: response.data.response || "I couldn't find information about that in the document." },
+        { sender: "bot", text: data.response || "I couldn't find information about that in the document." },
       ]);
     } catch (error: any) {
       console.error("Chat error:", error);
-      toast.error(error.response?.data?.message || "Error processing your question.");
+      toast.error(error.data?.message || "Error processing your question.");
       
       // Add error message to chat
       setMessages((prev) => [
@@ -159,7 +127,7 @@ useEffect(() => {
                 title="Uploaded PDF"
               />
             ) : (
-              <div className="flex items-center justify-center h-96">
+              <div className="flex items-center justify-center h-[calc(100vh-20rem)]">
                 <p>Loading PDF...</p>
               </div>
             )}

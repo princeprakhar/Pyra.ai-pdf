@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request, Body, HTTPException, status
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse,JSONResponse
 from app.schemas import SigninRequest, Token
-from app.auth import authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from app.auth import authenticate_user, create_access_token, create_refresh_token
 from app.dependencies.auth_dependencies import get_current_user,get_user,insert_user_to_db
 from app.models import UserPDF
 from sqlalchemy.orm import Session
@@ -10,7 +10,8 @@ from authlib.integrations.starlette_client import OAuth
 from app.dependencies.db_dependencies import get_db
 from datetime import timedelta
 import logging
-
+from jose import JWTError, jwt
+from app.config import SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_DAYS
 
 router = APIRouter()
 
@@ -28,9 +29,10 @@ oauth.register(
 )
 
 @router.post("/api/signin", response_model=Token)
-async def signin(signin_request: SigninRequest = Body(...),db:Session = Depends(get_db)):
+async def signin(signin_request: SigninRequest = Body(...), db: Session = Depends(get_db)):
     logging.info(f"Username: {signin_request.username} Password:{signin_request.password}")
-    user = authenticate_user(db,username=signin_request.username, password=signin_request.password)
+    
+    user = authenticate_user(db, username=signin_request.username, password=signin_request.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -39,11 +41,46 @@ async def signin(signin_request: SigninRequest = Body(...),db:Session = Depends(
         )
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+    refresh_token_expires = timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+
+    access_token = create_access_token({"sub": user.username}, access_token_expires)
+    refresh_token = create_refresh_token({"sub": user.username}, refresh_token_expires)
+    logging.info(f"{refresh_token}")
+
+    response = JSONResponse(content={"access_token": access_token, "token_type": "bearer"})
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,  # Prevent JavaScript access
+        secure=True,    # Send only over HTTPS
+        samesite="Lax"
     )
 
-    return Token(access_token=access_token, token_type="bearer")
+    return response
+
+@router.post("/api/refresh")
+async def refresh_access_token(request: Request):
+    refresh_token = request.cookies.get("refresh_token")
+    if not refresh_token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token missing")
+
+    try:
+        payload = jwt.decode(refresh_token, SECRET_KEY, algorithms=["HS256"])
+        username: str = payload.get("sub")
+        if not username:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+
+        new_access_token = create_access_token({"sub": username}, timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+        return {"access_token": new_access_token, "token_type": "bearer"}
+
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+
+@router.post("/api/logout")
+async def logout():
+    response = JSONResponse(content={"message": "Logged out"})
+    response.delete_cookie("refresh_token")
+    return response
 
 @router.get("/api/google")
 async def google_login(request: Request):
@@ -70,3 +107,5 @@ async def google_callback(request: Request,db:Session=Depends(get_db)):
 
     frontend_redirect_url = f"{FRONTEND_URL}?access_token={id_token}"
     return RedirectResponse(frontend_redirect_url)
+
+

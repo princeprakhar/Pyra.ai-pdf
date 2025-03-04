@@ -91,7 +91,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar, isOpen = false }) => {
             >
               Chat with{" "}
               <Image
-                src="/youtube-icon.png"
+                src="/youtube.png"
                 alt="YouTube"
                 width={20}
                 height={20}

@@ -1,21 +1,21 @@
-// AuthContext.tsx
 "use client";
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { BACKEND_URL } from "@/utils/constant";
 
 interface AuthContextType {
   isLoggedIn: boolean;
   login: (token: string) => void;
   logout: () => void;
+  fetchWithAuth: (url: string, options?: RequestInit) => Promise<Response>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const router  = useRouter();
+  const router = useRouter();
 
-  // On mount, check localStorage for a token
   useEffect(() => {
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("Token");
@@ -28,32 +28,84 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoggedIn(true);
   };
 
-  const logout = () => {
-    // Clear all necessary items from localStorage
+  const logout = async () => {
+    try {
+      await fetch(`${BACKEND_URL}/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+
     localStorage.removeItem("Token");
     localStorage.removeItem("pdfBlobUrl");
     localStorage.removeItem("pdfFileName");
-    
-    // Update state first
+
     setIsLoggedIn(false);
-    
-    // Then redirect to home page
     router.push("/");
-    
-    // Optionally dispatch an event to notify components about logout
+
     if (typeof window !== "undefined") {
       window.dispatchEvent(new Event("auth-state-changed"));
     }
   };
 
+  const refreshToken = async (): Promise<string | null> => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/refresh`, {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        logout();
+        return null;
+      }
+
+      const data = await response.json();
+      localStorage.setItem("Token", data.access_token);
+      return data.access_token;
+    } catch (error) {
+      console.error("Failed to refresh token:", error);
+      logout();
+      return null;
+    }
+  };
+
+  const fetchWithAuth = async (url: string, options: RequestInit = {}): Promise<Response> => {
+    let token = localStorage.getItem("Token");
+
+    let response = await fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 401) {
+      token = await refreshToken();
+      if (token) {
+        response = await fetch(url, {
+          ...options,
+          headers: {
+            ...options.headers,
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
+    }
+
+    return response;
+  };
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, fetchWithAuth }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook for consuming the context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
@@ -61,13 +113,3 @@ export const useAuth = () => {
   }
   return context;
 };
-
-
-
-
-
-  
-
- 
-
-  
