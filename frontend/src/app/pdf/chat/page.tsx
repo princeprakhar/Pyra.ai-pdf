@@ -153,7 +153,7 @@ useEffect(() => {
 
           {/* Chat Interface */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg flex flex-col h-[calc(100vh-12rem)]">
-            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="p-2 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
                 Chat with your PDF
               </h2>
@@ -211,7 +211,7 @@ useEffect(() => {
       <div>
         <Button
           onClick={handleDeleteAllPDFContext}
-          className="mt-4">
+          className="mt-4 ml-10">
           Delete All Existing PDF Context
         </Button>
       </div>
