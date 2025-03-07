@@ -36,3 +36,10 @@ class GenerateResponseRequest(BaseModel):
     
 class GetDocRequest(BaseModel):
     filename: str
+
+class YoutubeRequest(BaseModel):
+    youtube_url: str
+
+class YoutubeQueryRequest(BaseModel):
+    query: str
+    video_id: str
