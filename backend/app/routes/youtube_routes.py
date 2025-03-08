@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status,Query
 from app.schemas import YoutubeRequest, YoutubeQueryRequest
 from app.services.youtube_service import (
     process_upload_youtube_transcript ,
@@ -28,10 +28,15 @@ async def upload_youtube_transcript_handler(
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 @router.get("/transcript", status_code=status.HTTP_200_OK)
-def get_youtube_transcript_handler(request: YoutubeRequest,current_user: UserPDF = Depends(get_current_user)):
-    
+def get_youtube_transcript_handler(
+    youtube_url: str = Query(...), 
+    current_user: UserPDF = Depends(get_current_user)
+):
+    """
+    Get a YouTube transcript using a query parameter instead of request body.
+    """
     try:
-        return generate_video_summary(request.youtube_url, current_user)
+        return generate_video_summary(youtube_url, current_user)
     except Exception as error:
         logging.error(f"Error in get_youtube_transcript_handler: {error}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
@@ -39,16 +44,17 @@ def get_youtube_transcript_handler(request: YoutubeRequest,current_user: UserPDF
 
 @router.get("/query", status_code=status.HTTP_200_OK)
 async def query_youtube_transcript_handler(
-    request: YoutubeQueryRequest,
+    query: str = Query(...), 
+    video_id: str = Query(...),
     current_user: UserPDF = Depends(get_current_user)
 ):
     """
-    Endpoint for querying a YouTube video transcript.
+    Query a YouTube video transcript using query parameters.
     """
     try:
         return await generate_response_youtube_url_query(
-            query=request.query,
-            video_id=request.video_id,
+            query=query,
+            video_id=video_id,
             current_user=current_user
         )
     except Exception as error:

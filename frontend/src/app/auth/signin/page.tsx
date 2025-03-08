@@ -25,7 +25,7 @@ const SignIn = () => {
   // Redirect to chat page when user is logged in
   useEffect(() => {
     if (isLoggedIn) {
-      router.push("/pdf/chat");
+      router.push("/");
     }
   }, [isLoggedIn, router]);
 

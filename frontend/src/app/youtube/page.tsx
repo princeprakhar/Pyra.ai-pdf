@@ -7,6 +7,7 @@ import { BACKEND_URL } from "@/utils/constant";
 import { toast, Toaster } from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import SafeHTML from "@/components/SafeHTML";
 
 // Define a type for chat messages
 interface ChatMessage {
@@ -77,7 +78,6 @@ useEffect(() => {
         body: JSON.stringify({ youtube_url:videoUrl })
       });
       const data = await response.json();
-      console.log(data);
       if (!response.ok) {
         throw new Error(data.message || "Failed to load the YouTube video. Please check the URL.");
       }
@@ -85,6 +85,10 @@ useEffect(() => {
         toast.error("Invalid YouTube URL. Please check and try again.");
         return;
       }
+      if(data.video_id){
+        localStorage.setItem("video_id",videoId);
+      }
+
       
       setVideoId(videoId);
       setEmbedUrl(embedUrl);
@@ -102,6 +106,58 @@ useEffect(() => {
     }
   };
 
+
+  function formatTranscriptResponse(responseText: string) {
+    let formattedText = "";
+    
+    // Split response into sections
+    const sections = responseText.split(/<p><strong>Section \d+:<\/strong>/).filter(Boolean);
+    
+    sections.forEach((section, index) => {
+        section = section.trim();
+        
+        if (index === 0) {
+            // Overview section with improved styling
+            formattedText += `
+                <div class="mb-4">
+                    <h2 class="text-xl font-bold mb-2">📝 Overview</h2>
+                    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                        ${section}
+                    </div>
+                </div>`;
+        } else if (section.startsWith("To summarize")) {
+            // Key takeaways with bullet points
+            formattedText += `
+                <div class="mb-4">
+                    <h2 class="text-xl font-bold mb-2">💡 Key Takeaways</h2>
+                    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">`;
+            
+            const points = section.match(/\d+\..+?(?=\d+\.|$)/g) || [];
+            points.forEach(point => {
+                formattedText += `<div class="flex items-start mb-2">
+                    <span class="mr-2">•</span>
+                    <span>${point.trim()}</span>
+                </div>`;
+            });
+            
+            formattedText += `</div></div>`;
+        } else {
+            // Regular sections with improved styling
+            formattedText += `
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2">📌 Section ${index}</h3>
+                    <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                        ${section}
+                    </div>
+                </div>`;
+        }
+    });
+
+    return formattedText;
+}
+
+
+
   const handleSendQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim()) {
@@ -116,6 +172,18 @@ useEffect(() => {
     setIsChatLoading(true);
 
     try {
+      const response = await fetchWithAuth(
+        `${BACKEND_URL}/youtube/query?query=${encodeURIComponent(userQuestion)}&video_id=${encodeURIComponent(videoId)}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+      );
+
+      const data = await response.json();
+      const formattedResponse = formatTranscriptResponse(data.response);
       // In a real implementation, this would send the video ID to the backend
       // For now, we'll simulate a response
       setTimeout(() => {
@@ -123,7 +191,7 @@ useEffect(() => {
           ...prev,
           { 
             sender: "bot", 
-            text: `This is a simulated response about the YouTube video (ID: ${videoId}). In a real implementation, you would connect this to a backend that can analyze or discuss the video content.` 
+            text: `${formattedResponse}` 
           },
         ]);
         setIsChatLoading(false);
@@ -233,7 +301,8 @@ useEffect(() => {
                         : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 mr-auto max-w-[80%]"
                     }`}
                   >
-                    {msg.text}
+                    
+    <SafeHTML html={msg.text} />
                   </motion.div>
                 ))}
                 {isChatLoading && (
