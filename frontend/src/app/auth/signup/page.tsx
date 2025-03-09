@@ -35,7 +35,7 @@ const SignUp = () => {
   // Redirect to chat page if already logged in
   useEffect(() => {
     if (typeof window !== "undefined" && isLoggedIn) {
-      router.push("/chat");
+      router.push("/");
     }
   }, [isLoggedIn, router]);
 
