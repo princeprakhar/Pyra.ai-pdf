@@ -6,9 +6,9 @@ from app.models import UserPDF
 from app.dependencies.db_dependencies import get_db
 from app.services.user_service import validate_signup_data
 
-router = APIRouter()
+router = APIRouter(prefix = "/api/user",tags=["User"])
 
-@router.post("/api/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def signup(signup_request: SignupRequest = Body(...), db: Session = Depends(get_db)):
     validate_signup_data(signup_request, db)
 

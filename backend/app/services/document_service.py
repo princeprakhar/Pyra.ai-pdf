@@ -15,7 +15,7 @@ import uuid
 import logging
 import aiohttp
 from botocore.exceptions import ClientError
-from app.utils.helpers import batch_iterable
+from app.utils.helpers_utils import batch_iterable
 from app.dependencies.system_message_dependencies import get_latest_system_message
 from groq import Groq
 from langchain import hub

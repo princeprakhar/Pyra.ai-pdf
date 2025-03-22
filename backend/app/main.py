@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from app.routes import auth_routes, user_routes, document_routes, system_message_routes, youtube_routes
+from app.routes import auth_routes, user_routes, document_routes, system_message_routes, youtube_routes,blandai_routes
 from app.middlewares.logging_middleware import log_requests
 from app.config import SECRET_KEY, DATABASE_URL
 from app.database import engine, Base
@@ -24,7 +24,7 @@ app.add_middleware(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://prakhar-ai-pdf.vercel.app","http://localhost:3000"],
+    allow_origins=["https://prakhar-ai-pdf.vercel.app","http://localhost:3000","*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -37,6 +37,7 @@ app.include_router(user_routes.router)
 app.include_router(document_routes.router)
 app.include_router(system_message_routes.router)
 app.include_router(youtube_routes.router)
+app.include_router(blandai_routes.router)
 
 @app.get("/")
 async def root():

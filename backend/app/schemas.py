@@ -43,3 +43,18 @@ class YoutubeRequest(BaseModel):
 class YoutubeQueryRequest(BaseModel):
     query: str
     video_id: str
+
+
+class MakeCallRequest(BaseModel):
+    objective: str
+    context: str
+    caller_number: str
+    caller_name: str
+    caller_email: str
+    language_code: str
+    phone_number: str
+    name_of_org: str
+
+
+class CallDetailRequest(BaseModel):
+    pass

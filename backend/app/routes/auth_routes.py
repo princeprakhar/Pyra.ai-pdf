@@ -13,7 +13,7 @@ import logging
 from jose import JWTError, jwt
 from app.config import SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_DAYS
 
-router = APIRouter()
+router = APIRouter(prefix = "/api/auth",tags=["Auth"])
 
 oauth = OAuth()
 oauth.register(
@@ -28,7 +28,7 @@ oauth.register(
     jwks_uri="https://www.googleapis.com/oauth2/v3/certs"
 )
 
-@router.post("/api/signin", response_model=Token)
+@router.post("/signin", response_model=Token)
 async def signin(signin_request: SigninRequest = Body(...), db: Session = Depends(get_db)):
     logging.info(f"Username: {signin_request.username} Password:{signin_request.password}")
     
@@ -58,7 +58,7 @@ async def signin(signin_request: SigninRequest = Body(...), db: Session = Depend
 
     return response
 
-@router.post("/api/refresh")
+@router.post("/refresh")
 async def refresh_access_token(request: Request):
     refresh_token = request.cookies.get("refresh_token")
     if not refresh_token:
@@ -76,18 +76,18 @@ async def refresh_access_token(request: Request):
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
 
-@router.post("/api/logout")
+@router.post("/logout")
 async def logout():
     response = JSONResponse(content={"message": "Logged out"})
     response.delete_cookie("refresh_token")
     return response
 
-@router.get("/api/google")
+@router.get("/google")
 async def google_login(request: Request):
     redirect_uri = GOOGLE_REDIRECT_URI
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
-@router.get("/api/google/callback")
+@router.get("/google/callback")
 async def google_callback(request: Request,db:Session=Depends(get_db)):
     logging.info("In the callback function")
     token = await oauth.google.authorize_access_token(request)

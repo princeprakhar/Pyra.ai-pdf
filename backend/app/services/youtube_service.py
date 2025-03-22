@@ -6,7 +6,7 @@ from youtube_transcript_api import YouTubeTranscriptApi
 
 # External dependencies from your project
 from app.utils.embedding_utils import embeddings, chunker, pc, index_name
-from app.utils.helpers import batch_iterable
+from app.utils.helpers_utils import batch_iterable
 from app.utils.rerank_utils import rerank_documents
 from app.config import GROQ_API_KEY, OPENAI_API_KEY
 from app.models import UserPDF
