@@ -3,7 +3,7 @@
 **PyraPDF.AI** is an AI-powered assistant that allows users to upload and interact with PDF documents using advanced language models and vector-based search.
 
 🔗 **Live App**: [https://prakhar-ai-pdf.vercel.app](https://prakhar-ai-pdf.vercel.app)
-
+- [Watch the Demo Video](https://www.youtube.com/watch?v=n1R1FJVpmDs)
 ---
 
 ## 🧠 Features
