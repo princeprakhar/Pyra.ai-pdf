@@ -26,7 +26,7 @@ PyJWT==2.10.1
 # torch==2.5.1
 python-jose==3.3.0
 boto3==1.36.11
-numpy>=1.22.4,<2.0.0
+numpy>=1.26.4,<2.0.0
 psycopg2-binary==2.9.10
 passlib==1.7.4
 email-validator==2.2.0

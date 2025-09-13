@@ -6,8 +6,6 @@ from rich import print #type:ignore
 
 
 router  = APIRouter(prefix="/api/bland-ai",tags=["BlandAI"])
-
-c
 @router.post("/assistant-initiate-call")
 async def make_call_route(request: MakeCallRequest):
     try:
