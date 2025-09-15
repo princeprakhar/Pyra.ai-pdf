@@ -6,8 +6,6 @@ from app.middlewares.logging_middleware import log_requests
 from app.config import SECRET_KEY, DATABASE_URL
 from app.database import engine, Base
 import logging
-import numpy as np
-
 import warnings
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
@@ -69,7 +67,7 @@ logger = logging.getLogger(__name__)
 def some_function():
     # Example operation
     try:
-        result = np.exp2(some_value)  # Replace some_value with your variable
+        result= 1 / 2
         logging.debug(f"Result: {result}")
     except Exception as e:
         logging.error(f"Error encountered: {e}")

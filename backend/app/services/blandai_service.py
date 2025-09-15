@@ -69,3 +69,74 @@ def make_call(
     except Exception as e:
         logging.error(f"Unexpected error in make_call: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
+def end_call(call_id: str):
+    try:
+        url = f"https://api.bland.ai/v1/calls/{call_id}/stop"
+        print(f"Url ----- {url}")
+        headers = {
+            "authorization": BLANDAI_API_KEY,  # docs don’t mention "Bearer"
+            "Content-Type": "application/json"      
+        }
+        payload = {"call_id": call_id}
+
+        response = requests.post(url, headers=headers, json=payload)
+
+        if response.status_code != 200:
+            logging.error(f"Bland AI API error on end_call: {response.status_code} - {response.text}")
+            raise HTTPException(
+                status_code=response.status_code,
+                detail=f"Bland AI API error: {response.text}"
+            )
+        return response.json()
+
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Request error in end_call: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Error calling external API: {str(e)}")
+
+    except Exception as e:
+        logging.error(f"Unexpected error in end_call: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+
+
+
+def get_call_status(call_id: str):
+    try:
+        url = f"https://api.bland.ai/v1/calls/{call_id}"
+        headers = {
+            "authorization": f"{BLANDAI_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            logging.error(f"Bland AI API error on get_call_status: {response.status_code} - {response.text}")
+            raise HTTPException(status_code=response.status_code, detail=f"Bland AI API error: {response.text}")
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Request error in get_call_status: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Error calling external API: {str(e)}")
+    except Exception as e:
+        logging.error(f"Unexpected error in get_call_status: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+    
+def get_call_transcript(call_id: str):
+    try:
+        url = f"https://api.bland.ai/v1/calls/{call_id}/transcript"
+        headers = {
+            "authorization": f"{BLANDAI_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        response = requests.get(url, headers=headers)   
+        if response.status_code != 200:
+            logging.error(f"Bland AI API error on get_call_transcript: {response.status_code} - {response.text}")
+            raise HTTPException(status_code=response.status_code, detail=f"Bland AI API error: {response.text}")
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Request error in get_call_transcript: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"Error calling external API: {str(e)}")
+    except Exception as e:
+        logging.error(f"Unexpected error in get_call_transcript: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+    
+
