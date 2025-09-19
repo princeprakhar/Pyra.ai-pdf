@@ -54,10 +54,8 @@ connection_manager = WebSocketConnectionManager()
 async def make_call_route(request: MakeCallRequest):
     """Initiate a new call with simple webhook"""
     try:
-        print(f"Initiating call with request: {request.__dict__}")
-        
         # Simple webhook URL (replace with your actual domain)
-        webhook_url = "https://d10deff31156.ngrok-free.app/api/webhooks/blandai-simple"
+        webhook_url = "https://prakhar-ai-pdf.onrender.com/api/webhooks/blandai-simple"
         
         result = blandai_service.make_call(
             objective=request.objective,
