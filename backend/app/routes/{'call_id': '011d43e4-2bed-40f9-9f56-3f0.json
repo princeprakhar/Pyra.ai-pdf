@@ -1,0 +1,171 @@
+{
+  "call_id": "011d43e4-2bed-40f9-9f56-3f05d8a7ea37",
+  "c_id": "011d43e4-2bed-40f9-9f56-3f05d8a7ea37",
+  "call_length": 1.56666666666667,
+  "batch_id": null,
+  "to": "+918874657725",
+  "from": "+18045755980",
+  "completed": true,
+  "created_at": "2025-09-19T01:49:01.708+00:00",
+  "inbound": false,
+  "queue_status": "complete",
+  "max_duration": 30,
+  "error_message": null,
+  "variables": {
+    "now": "Thursday, September 18, 2025 6:49 PM",
+    "now_utc": "Friday, September 19, 2025 1:49 AM",
+    "short_from": "8045755980",
+    "short_to": "8874657725",
+    "from": "+18045755980",
+    "to": "+918874657725",
+    "call_id": "011d43e4-2bed-40f9-9f56-3f05d8a7ea37",
+    "phone_number": "+918874657725",
+    "country": "IN",
+    "state": "Uttar Pradesh (East)",
+    "language": "Auto Detect (Legacy)",
+    "metadata": {
+      "caller_name": "AI Assistant User",
+      "caller_email": "talhir@gmail.com",
+      "organization": "AI Call Service",
+      "created_at": "2025-09-19T01:49:00.000662"
+    },
+    "timestamp": "2025-09-18T18:49:16-07:00",
+    "timezone": "America/Los_Angeles"
+  },
+  "answered_by": "voicemail",
+  "record": false,
+  "recording_url": null,
+  "metadata": {
+    "created_at": "2025-09-19T01:49:00.000662",
+    "caller_name": "AI Assistant User",
+    "caller_email": "talhir@gmail.com",
+    "organization": "AI Call Service"
+  },
+  "summary": "The call was between Clemens from AI Call Service and a user to schedule an appointment on behalf of AI Assistant User. The user was available tomorrow after 3pm and the appointment was scheduled for 4:30pm. The call was straightforward and brief, with no additional requests or concerns raised by the user. The appointment details were confirmed and the call was ended.",
+  "price": 0.141,
+  "started_at": "2025-09-19T01:49:01.708Z",
+  "local_dialing": false,
+  "call_ended_by": "ASSISTANT",
+  "pathway_logs": null,
+  "analysis_schema": null,
+  "analysis": null,
+  "transferred_to": null,
+  "transferred_at": null,
+  "pathway_tags": [],
+  "recording_expiration": null,
+  "status": "completed",
+  "pathway_id": null,
+  "is_proxy_agent_call": false,
+  "citation_schema_ids": [],
+  "warm_transfer_calls": null,
+  "concatenated_transcript": "user: Hello. \n assistant: Hello... I'm Clemens, calling on behalf of AI Assistant User... I hope I've caught you at a good time? \n user: 大家好... \n assistant: I think there might have been a little misunderstanding... I'm Clemens, and I'm calling from AI Call Service... Could you please speak in English so we can communicate more effectively? \n user: Yeah, you have called me at the right time. \n assistant: Great..Thank you so much f- \n user: Tell me what's the discussion? \n assistant: I'm calling today because AI Assistant User is interested in scheduling an appointment... Can you please tell me a little bit about your availability? \n user: Yeah, tomorrow after 3pm I will be available... \n assistant: That's great... Tomorrow after three p m sounds like a good time... What time would you say is the latest I can schedule the appointment for? \n user: You can choose your time. Just stay after 3 p.m. whenever you are free. \n assistant: Alright... Let me just check the schedule... Okay, how about tomorrow at..Four thirty p m? \n user: Yeah, it will be okay. \n assistant: Great... So, I've got the appointment scheduled for tomorrow at four thirty p m... Is there anything else I can provide you with or confirm before we end the call? \n user: No, that's all. You can end up the call. \n assistant: Well..Thank you so much for your time today... I hope you have a wonderful rest of your day... Goodbye \n agent-action: Ended call \n ",
+  "transcripts": [
+    {
+      "id": 319664674,
+      "user": "user",
+      "text": "Hello.",
+      "created_at": "2025-09-19T01:49:19.873+00:00"
+    },
+    {
+      "id": 319664701,
+      "user": "assistant",
+      "text": "Hello... I'm Clemens, calling on behalf of AI Assistant User... I hope I've caught you at a good time?",
+      "created_at": "2025-09-19T01:49:21.579+00:00"
+    },
+    {
+      "id": 319664772,
+      "user": "user",
+      "text": "大家好...",
+      "created_at": "2025-09-19T01:49:28.371+00:00"
+    },
+    {
+      "id": 319664834,
+      "user": "assistant",
+      "text": "I think there might have been a little misunderstanding... I'm Clemens, and I'm calling from AI Call Service... Could you please speak in English so we can communicate more effectively?",
+      "created_at": "2025-09-19T01:49:32.124+00:00"
+    },
+    {
+      "id": 319664980,
+      "user": "user",
+      "text": "Yeah, you have called me at the right time.",
+      "created_at": "2025-09-19T01:49:42.912+00:00"
+    },
+    {
+      "id": 319665010,
+      "user": "assistant",
+      "text": "Great..Thank you so much f-",
+      "created_at": "2025-09-19T01:49:45.093+00:00"
+    },
+    {
+      "id": 319665028,
+      "user": "user",
+      "text": "Tell me what's the discussion?",
+      "created_at": "2025-09-19T01:49:46.252+00:00"
+    },
+    {
+      "id": 319665107,
+      "user": "assistant",
+      "text": "I'm calling today because AI Assistant User is interested in scheduling an appointment... Can you please tell me a little bit about your availability?",
+      "created_at": "2025-09-19T01:49:51.668+00:00"
+    },
+    {
+      "id": 319665237,
+      "user": "user",
+      "text": "Yeah, tomorrow after 3pm I will be available...",
+      "created_at": "2025-09-19T01:50:00.211+00:00"
+    },
+    {
+      "id": 319665303,
+      "user": "assistant",
+      "text": "That's great... Tomorrow after three p m sounds like a good time... What time would you say is the latest I can schedule the appointment for?",
+      "created_at": "2025-09-19T01:50:04.766+00:00"
+    },
+    {
+      "id": 319665495,
+      "user": "user",
+      "text": "You can choose your time. Just stay after 3 p.m. whenever you are free.",
+      "created_at": "2025-09-19T01:50:19.417+00:00"
+    },
+    {
+      "id": 319665522,
+      "user": "assistant",
+      "text": "Alright... Let me just check the schedule... Okay, how about tomorrow at..Four thirty p m?",
+      "created_at": "2025-09-19T01:50:22.416+00:00"
+    },
+    {
+      "id": 319665598,
+      "user": "user",
+      "text": "Yeah, it will be okay.",
+      "created_at": "2025-09-19T01:50:28.732+00:00"
+    },
+    {
+      "id": 319665672,
+      "user": "assistant",
+      "text": "Great... So, I've got the appointment scheduled for tomorrow at four thirty p m... Is there anything else I can provide you with or confirm before we end the call?",
+      "created_at": "2025-09-19T01:50:34.581+00:00"
+    },
+    {
+      "id": 319665779,
+      "user": "user",
+      "text": "No, that's all. You can end up the call.",
+      "created_at": "2025-09-19T01:50:43.311+00:00"
+    },
+    {
+      "id": 319665816,
+      "user": "assistant",
+      "text": "Well..Thank you so much for your time today... I hope you have a wonderful rest of your day... Goodbye",
+      "created_at": "2025-09-19T01:50:46.614+00:00"
+    },
+    {
+      "id": 319665854,
+      "user": "agent-action",
+      "text": "Ended call",
+      "created_at": "2025-09-19T01:50:49.399+00:00"
+    }
+  ],
+  "corrected_duration": "94",
+  "end_at": "2025-09-19T01:50:49.000Z",
+  "disposition_tag": "CALL_BACK_SCHEDULED",
+  "pre_transfer_duration": null,
+  "post_transfer_duration": null
+}
